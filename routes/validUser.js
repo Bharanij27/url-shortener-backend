@@ -5,7 +5,7 @@ const mongoClient = mongodb.MongoClient;
 const url = "mongodb+srv://bharani:DF8b4vOeqVVIchCQ@cluster0.jsd3k.mongodb.net?retryWrites=true&w=majority";
 
 
-router.get("/", async function (req, res, next) {
+router.post("/", async function (req, res, next) {
     let client;
     
     try {
