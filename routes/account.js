@@ -70,7 +70,8 @@ router.post("/reset", async function (req, res, next) {
         client.close();
 
         if (userInfo.value) {
-            sendMail(req.body.email, 'verification', resetkey);
+            let mail = sendMail(req.body.email, 'verification', resetkey);
+            if(!mail) throw "mail not send"
             res.json({
                 status: 200,
                 message: "Link sent"

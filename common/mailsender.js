@@ -11,10 +11,13 @@ let sendMail = async (receiver, key, activationKey) => {
             },
         });
 
-        await transporter.sendMail({
+        let mail = await transporter.sendMail({
             to: receiver, // list of receivers
             subject: "Activation Link", // Subject line
             text: `Your Activation link is : https://bharani-url-shortener.netlify.app/verify.html?${key}?=${activationKey}`,
+        },(err, info) => {
+            if(err) return false
+            return true
         });
     } catch (error) {
         console.log(error);

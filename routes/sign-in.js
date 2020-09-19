@@ -43,7 +43,8 @@ router.post("/", async function (req, res, next) {
                 activated,
                 activationKey,
             });
-            sendMail(email, 'activationkey', activationKey);
+            let mail = sendMail(email, 'activationkey', activationKey);
+            if(!mail) throw "mail not send";
             res.json({
                 status: 200,
                 message: "User Account...please visit the link sent to your registered e-mail id to activate your account",
