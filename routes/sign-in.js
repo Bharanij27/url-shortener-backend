@@ -3,7 +3,7 @@ var router = express.Router();
 const bcryptjs = require('bcryptjs');
 const mongodb = require("mongodb");
 const mongoClient = mongodb.MongoClient;
-const url = "mongodb://localhost:27017/";
+const url = "mongodb+srv://bharani:DF8b4vOeqVVIchCQ@cluster0.jsd3k.mongodb.net?retryWrites=true&w=majority";
 const {
     sendMail
 } = require('../common/mailsender');
@@ -13,7 +13,7 @@ router.post("/", async function (req, res, next) {
     let client;
     try {
         client = await mongoClient.connect(url);
-        let db = client.db("b15wd");
+        let db = client.db("zenClass");
         let {
             email,
             fname,
@@ -22,7 +22,7 @@ router.post("/", async function (req, res, next) {
         } = req.body;
         let activated = false;
         let activationKey = Math.random().toString(20).substr(2, 15);
-        let existing = await db.collection("students").findOne({
+        let existing = await db.collection("url-users").findOne({
             email: email,
         });
 
@@ -35,7 +35,7 @@ router.post("/", async function (req, res, next) {
             let salt = bcryptjs.genSaltSync(10);
             let hashedPassword = bcryptjs.hashSync(pass, salt)
             pass = hashedPassword;
-            await db.collection("students").insertOne({
+            await db.collection("url-users").insertOne({
                 email,
                 fname,
                 lname,

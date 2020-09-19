@@ -3,7 +3,7 @@ var router = express.Router();
 const bcryptjs = require('bcryptjs');
 const mongodb = require("mongodb");
 const mongoClient = mongodb.MongoClient;
-const url = "mongodb://localhost:27017/";
+const url = "mongodb+srv://bharani:DF8b4vOeqVVIchCQ@cluster0.jsd3k.mongodb.net?retryWrites=true&w=majority";
 const {
     sendMail
 } = require('../common/mailsender');
@@ -13,9 +13,9 @@ router.put("/activationkey", async function (req, res, next) {
 
     try {
         client = await mongoClient.connect(url);
-        let db = client.db("b15wd");
+        let db = client.db("zenClass");
 
-        let userInfo = await db.collection("students").findOneAndUpdate({
+        let userInfo = await db.collection("url-users").findOneAndUpdate({
             activationKey: req.body.secretKey
         }, {
             $set: {
@@ -49,9 +49,9 @@ router.post("/reset", async function (req, res, next) {
 
     try {
         client = await mongoClient.connect(url);
-        let db = client.db("b15wd");
+        let db = client.db("zenClass");
 
-        let userInfo = await db.collection("students").findOneAndUpdate({
+        let userInfo = await db.collection("url-users").findOneAndUpdate({
             email: req.body.email
         }, {
             $set: {
@@ -83,9 +83,9 @@ router.put("/verification", async function (req, res, next) {
 
     try {
         client = await mongoClient.connect(url);
-        let db = client.db("b15wd");
+        let db = client.db("zenClass");
 
-        let userInfo = await db.collection("students").findOneAndUpdate({
+        let userInfo = await db.collection("url-users").findOneAndUpdate({
             resetkey: req.body.secretKey
         }, {
             $unset: {
@@ -115,7 +115,7 @@ router.post("/changePassword", async function (req, res, next) {
 
     try {
         client = await mongoClient.connect(url);
-        let db = client.db("b15wd");
+        let db = client.db("zenClass");
         let pass = req.body.pass;
 
         let salt = bcryptjs.genSaltSync(10);
@@ -123,7 +123,7 @@ router.post("/changePassword", async function (req, res, next) {
         pass = hashedPassword;
 
 
-        let userInfo = await db.collection("students").findOneAndUpdate({
+        let userInfo = await db.collection("url-users").findOneAndUpdate({
             email: req.body.email
         }, {
             $set: {

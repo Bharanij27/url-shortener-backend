@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 const mongodb = require("mongodb");
 const mongoClient = mongodb.MongoClient;
-const url = "mongodb://localhost:27017/";
+const url = "mongodb+srv://bharani:DF8b4vOeqVVIchCQ@cluster0.jsd3k.mongodb.net?retryWrites=true&w=majority";
 const {
     authenticate
 } = require('../common/auth');
@@ -12,7 +12,7 @@ router.get("/:tinyUrl", async function (req, res, next) {
     let client;
     try {
         client = await mongoClient.connect(url);
-        let db = client.db("b15wd");
+        let db = client.db("zenClass");
         let urlData = await db.collection("urls").findOne({
             shortURLPath: req.params.tinyUrl
         });
