@@ -28,7 +28,7 @@ router.post("/", async function (req, res, next) {
         });
 
         await db.collection("url-users").findOne(
-            {email: user.email},
+            {email: user.id},
             {
                 $push : {urls : shortURLPath}
             }
