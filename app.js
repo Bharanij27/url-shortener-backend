@@ -10,6 +10,7 @@ var signInRouter = require('./routes/sign-in');
 var accountRouter = require('./routes/account');
 var shortRouter = require('./routes/s');
 var generatorRoute = require('./routes/generateURL');
+var validateRoute = require('./routes/validUser');
 
 var app = express();
 
@@ -32,6 +33,7 @@ app.use('/signup', signInRouter);
 app.use('/account', accountRouter);
 app.use('/s', shortRouter);
 app.use('/generateURL', generatorRoute);
+app.use('/validate', validateRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

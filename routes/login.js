@@ -4,10 +4,7 @@ const mongodb = require("mongodb");
 const mongoClient = mongodb.MongoClient;
 const url = "mongodb+srv://bharani:DF8b4vOeqVVIchCQ@cluster0.jsd3k.mongodb.net?retryWrites=true&w=majority";
 const bcryptjs = require("bcryptjs");
-const jwt = require('jsonwebtoken')
-const {
-    authenticate
-} = require('../common/auth');
+const jwt = require('jsonwebtoken');
 
 router.post("/", async function (req, res, next) {
     let client;
@@ -22,8 +19,7 @@ router.post("/", async function (req, res, next) {
         let existing = await db.collection("url-users").findOne({
             email: email
         });
-        client.close();
-
+        
         if (!existing) {
             res.json({
                 status: 404,
@@ -31,7 +27,7 @@ router.post("/", async function (req, res, next) {
             });
         } else {
             let comparedResult = await bcryptjs.compare(pass, existing.pass)
-            console.log(comparedResult)
+            
             if (!comparedResult) {
                 res.json({
                     status: 500,
@@ -44,12 +40,15 @@ router.post("/", async function (req, res, next) {
                 });
             } else {
                 let token = jwt.sign({id : email}, "secret key");
+                await db.collection("url-users").findOneAndUpdate({email: email},{$set : {token : token}});
+                
                 res.json({
                     status: 200,
                     message: "Valid User",
                     token
                 });
             }
+            client.close();
         }
     } catch (error) {
         client.close();

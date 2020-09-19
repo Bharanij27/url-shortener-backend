@@ -7,6 +7,7 @@ const url = "mongodb+srv://bharani:DF8b4vOeqVVIchCQ@cluster0.jsd3k.mongodb.net?r
 const {
     sendMail
 } = require('../common/mailsender');
+const jwt = require('jsonwebtoken');
 
 router.put("/activationkey", async function (req, res, next) {
     let client;
@@ -15,11 +16,18 @@ router.put("/activationkey", async function (req, res, next) {
         client = await mongoClient.connect(url);
         let db = client.db("zenClass");
 
+        let user = await db.collection('url-users').findOne({
+            activationKey: req.body.secretKey
+        }); 
+
+        let token = jwt.sign({id : user.email}, "secret key");
+
         let userInfo = await db.collection("url-users").findOneAndUpdate({
             activationKey: req.body.secretKey
         }, {
             $set: {
-                activated: true
+                activated: true,
+                token : token
             },
             $unset: {
                 activationKey: ""
@@ -30,7 +38,8 @@ router.put("/activationkey", async function (req, res, next) {
         if (userInfo.value) {
             res.json({
                 status: 200,
-                message: "Activated"
+                message: "Activated",
+                token
             })
         } else {
             res.json({
