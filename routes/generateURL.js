@@ -19,7 +19,7 @@ router.post("/", async function (req, res, next) {
             shortURLPath = Math.random().toString(20).substr(2, 6);
             search = await db.collection("urls").findOne({shortURLPath : shortURLPath});
         }while(search !== null);
-        shortURL = `https://tinii-url.herokuapp.com/${shortURLPath}`;
+        shortURL = `https://tinii-url.herokuapp.com/s/${shortURLPath}`;
 
         let urlData = await db.collection("urls").insertOne({
             shortURLPath,
