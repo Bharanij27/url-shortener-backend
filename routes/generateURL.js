@@ -9,10 +9,11 @@ router.post("/", async function (req, res, next) {
     console.log('name')
     let client, search;
     let shortURL, shortURLPath, fullURL = req.body.fullURL;
+    let token = req.body.token;
     try {
         client = await mongoClient.connect(url);
         let db = client.db("zenClass");
-        let user = jwt.verify(token, 'secret key')
+        let user = jwt.verify(token, 'secret key');
 
         do{
             shortURLPath = Math.random().toString(20).substr(2, 6);
@@ -27,7 +28,7 @@ router.post("/", async function (req, res, next) {
             count : 0,
         });
 
-        await db.collection("url-users").findOne(
+        await db.collection("url-users").findOneAndUpdate(
             {email: user.id},
             {
                 $push : {urls : shortURLPath}
@@ -41,6 +42,7 @@ router.post("/", async function (req, res, next) {
         client.close();
     } catch (error) {
         client.close();
+        console.log(error)
         res.json({
             status: 404,
             message: "Something went wrong in server",
