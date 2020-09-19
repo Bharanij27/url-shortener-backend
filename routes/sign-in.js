@@ -40,6 +40,7 @@ router.post("/", async function (req, res, next) {
                 fname,
                 lname,
                 pass,
+                urls : [],
                 activated,
                 activationKey,
             });
