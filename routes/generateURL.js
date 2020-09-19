@@ -3,7 +3,7 @@ var router = express.Router();
 const mongodb = require("mongodb");
 const mongoClient = mongodb.MongoClient;
 const url = "mongodb+srv://bharani:DF8b4vOeqVVIchCQ@cluster0.jsd3k.mongodb.net?retryWrites=true&w=majority";
-
+const jwt = require('jsonwebtoken');
 
 router.post("/", async function (req, res, next) {
     console.log('name')
@@ -12,6 +12,7 @@ router.post("/", async function (req, res, next) {
     try {
         client = await mongoClient.connect(url);
         let db = client.db("zenClass");
+        let user = jwt.verify(token, 'secret key')
 
         do{
             shortURLPath = Math.random().toString(20).substr(2, 6);
@@ -27,9 +28,9 @@ router.post("/", async function (req, res, next) {
         });
 
         await db.collection("url-users").findOne(
-            {token: token},
+            {email: user.email},
             {
-                $push : {urls : token}
+                $push : {urls : shortURLPath}
             }
         );
 

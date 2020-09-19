@@ -32,6 +32,7 @@ router.post("/", async function (req, res, next) {
                 message: "E-mail id already exist....please Login",
             });
         } else {
+            let urls = [];
             let salt = bcryptjs.genSaltSync(10);
             let hashedPassword = bcryptjs.hashSync(pass, salt)
             pass = hashedPassword;
@@ -40,7 +41,7 @@ router.post("/", async function (req, res, next) {
                 fname,
                 lname,
                 pass,
-                urls : [],
+                urls,
                 activated,
                 activationKey,
             });
