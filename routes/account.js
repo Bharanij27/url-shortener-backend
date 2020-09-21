@@ -132,7 +132,7 @@ router.post("/changePassword", async function (req, res, next) {
         let hashedPassword = bcryptjs.hashSync(pass, salt)
         pass = hashedPassword;
 
-        let email = jwt.verify(token, 'secret key').id;
+        let email = req.body.email;
         let userInfo = await db.collection("url-users").findOneAndUpdate({
             email: email
         }, {
