@@ -27,7 +27,6 @@ router.put("/activationkey", async function (req, res, next) {
         }, {
             $set: {
                 activated: true,
-                token : token
             },
             $unset: {
                 activationKey: ""
