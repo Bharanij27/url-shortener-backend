@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 const mongodb = require("mongodb");
 const mongoClient = mongodb.MongoClient;
-const url = "mongodb+srv://bharani:DF8b4vOeqVVIchCQ@cluster0.jsd3k.mongodb.net?retryWrites=true&w=majority";
+const url = process.env.mongodbURL || "mongodb://localhost:27017/";
 const bcryptjs = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 
@@ -40,7 +40,6 @@ router.post("/", async function (req, res, next) {
                 });
             } else {
                 let token = jwt.sign({id : email}, "secret key");
-                await db.collection("url-users").findOneAndUpdate({email: email},{$set : {token : token}});
                 
                 res.json({
                     status: 200,

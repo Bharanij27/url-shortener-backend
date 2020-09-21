@@ -3,7 +3,7 @@ var router = express.Router();
 const bcryptjs = require('bcryptjs');
 const mongodb = require("mongodb");
 const mongoClient = mongodb.MongoClient;
-const url = "mongodb+srv://bharani:DF8b4vOeqVVIchCQ@cluster0.jsd3k.mongodb.net?retryWrites=true&w=majority";
+const url = process.env.mongodbURL || "mongodb://localhost:27017/";
 const {
     sendMail
 } = require('../common/mailsender');

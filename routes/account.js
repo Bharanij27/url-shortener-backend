@@ -3,7 +3,7 @@ var router = express.Router();
 const bcryptjs = require('bcryptjs');
 const mongodb = require("mongodb");
 const mongoClient = mongodb.MongoClient;
-const url = "mongodb+srv://bharani:DF8b4vOeqVVIchCQ@cluster0.jsd3k.mongodb.net?retryWrites=true&w=majority";
+const url = process.env.mongodbURL || "mongodb://localhost:27017/";
 const {
     sendMail
 } = require('../common/mailsender');
@@ -132,9 +132,9 @@ router.post("/changePassword", async function (req, res, next) {
         let hashedPassword = bcryptjs.hashSync(pass, salt)
         pass = hashedPassword;
 
-
+        let email = jwt.verify(token, 'secret key').id;
         let userInfo = await db.collection("url-users").findOneAndUpdate({
-            email: req.body.email
+            email: email
         }, {
             $set: {
                 pass: pass
