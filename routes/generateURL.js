@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 const mongodb = require("mongodb");
 const mongoClient = mongodb.MongoClient;
-const url = "mongodb+srv://bharani:DF8b4vOeqVVIchCQ@cluster0.jsd3k.mongodb.net?retryWrites=true&w=majority" || "mongodb://localhost:27017/";
+const url = process.env.mongodbURL || "mongodb://localhost:27017/";
 const jwt = require('jsonwebtoken');
 const { use } = require("./users");
 
