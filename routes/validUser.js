@@ -27,7 +27,7 @@ router.post("/", async function (req, res, next) {
                     })
                 }
                 else{
-                    let resultUrl = await db.collection('urls').find({shortURLPath : {$in : isTokenValid.urls}}).toArray();
+                    let resultUrl = await db.collection('urls').find({userId : user.id}).toArray();
                     res.json({
                         status: 200,
                         data: resultUrl,

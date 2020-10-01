@@ -4,6 +4,7 @@ const mongodb = require("mongodb");
 const mongoClient = mongodb.MongoClient;
 const url = process.env.mongodbURL || "mongodb://localhost:27017/";
 const jwt = require('jsonwebtoken');
+const { use } = require("./users");
 
 router.post("/", async function (req, res, next) {
     console.log('name')
@@ -15,30 +16,40 @@ router.post("/", async function (req, res, next) {
         let db = client.db("zenClass");
         let user = jwt.verify(token, 'secret key');
 
-        do{
-            shortURLPath = Math.random().toString(20).substr(2, 6);
-            search = await db.collection("urls").findOne({shortURLPath : shortURLPath});
-        }while(search !== null);
+        let isURLAvail = await db.collection("url").findOne({userId : user.id, fullURL : fullURL});
+        if(isURLAvail){
+            res.json({
+                status : 304,
+                shortURL : isURLAvail.shortURL
+            })
+        }
+        else{
+            do{
+                shortURLPath = Math.random().toString(20).substr(2, 6);
+                search = await db.collection("urls").findOne({shortURLPath : shortURLPath});
+            }while(search !== null);
 
-        shortURL = `https://tinii-url.herokuapp.com/s/${shortURLPath}`;
-        let urlData = await db.collection("urls").insertOne({
-            shortURLPath,
-            shortURL,
-            fullURL,
-            count : 0,
-        });
+            shortURL = `https://tinii-url.herokuapp.com/s/${shortURLPath}`;
+            let urlData = await db.collection("urls").insertOne({
+                userId : user.id,
+                shortURLPath,
+                shortURL,
+                fullURL,
+                count : 0,
+            });
 
-        await db.collection("url-users").findOneAndUpdate(
-            {email: user.id},
-            {
-                $push : {urls : shortURLPath}
-            }
-        );
+            await db.collection("url-users").findOneAndUpdate(
+                {email: user.id},
+                {
+                    $push : {urls : shortURLPath}
+                }
+            );
 
-        res.json({
-            status : 200,
-            shortURL
-        })
+            res.json({
+                status : 200,
+                shortURL
+            })
+        }
         client.close();
     } catch (error) {
         client.close();
