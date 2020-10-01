@@ -2,12 +2,11 @@ var express = require("express");
 var router = express.Router();
 const mongodb = require("mongodb");
 const mongoClient = mongodb.MongoClient;
-const url = process.env.mongodbURL || "mongodb://localhost:27017/";
+const url = "mongodb+srv://bharani:DF8b4vOeqVVIchCQ@cluster0.jsd3k.mongodb.net?retryWrites=true&w=majority" || "mongodb://localhost:27017/";
 const jwt = require('jsonwebtoken');
 const { use } = require("./users");
 
 router.post("/", async function (req, res, next) {
-    console.log('name')
     let client, search;
     let shortURL, shortURLPath, fullURL = req.body.fullURL;
     let token = req.body.token;
@@ -15,8 +14,8 @@ router.post("/", async function (req, res, next) {
         client = await mongoClient.connect(url);
         let db = client.db("zenClass");
         let user = jwt.verify(token, 'secret key');
+        let isURLAvail = await db.collection("urls").findOne({userId : user.id, fullURL : fullURL});
 
-        let isURLAvail = await db.collection("url").findOne({userId : user.id, fullURL : fullURL});
         if(isURLAvail){
             res.json({
                 status : 304,
@@ -52,8 +51,8 @@ router.post("/", async function (req, res, next) {
         }
         client.close();
     } catch (error) {
-        client.close();
         console.log(error)
+        client.close();
         res.json({
             status: 404,
             message: "Something went wrong in server",
